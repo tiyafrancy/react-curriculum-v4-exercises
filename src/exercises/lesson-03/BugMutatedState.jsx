@@ -13,8 +13,8 @@ export default function BugMutatedState() {
   let [count, setCount] = useState(0);
 
   function handleAdd() {
-    count++;
-    setCount(count);
+    // count++;
+    setCount(count + 1);
   }
 
   return (
@@ -27,3 +27,4 @@ export default function BugMutatedState() {
 
 // Explanation:
 // (Write your explanation here)
+// State updates should always be performed by passing a new value directly into the state setter function (setCount).

@@ -7,9 +7,11 @@ export default function BugStrictMode() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    setInterval(() => {
+    const intervalId = setInterval(() => {
       setCount((c) => c + 1);
     }, 1000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
@@ -21,3 +23,4 @@ export default function BugStrictMode() {
 }
 
 // Write your explanation of how StrictMode helps us catch this bug
+// By forcing an extra mount/unmount cycle in development, Strict Mode immediately reveals effects that produce side effects without cleaning them up.

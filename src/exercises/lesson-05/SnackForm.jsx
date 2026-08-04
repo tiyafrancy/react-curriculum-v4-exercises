@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import styles from './SnackForm.module.css';
 
 export default function SnackForm({
@@ -9,17 +10,36 @@ export default function SnackForm({
 }) {
   const isEditing = Boolean(editingSnack);
 
+  const [name, setName] = useState('');
+  const [rating, setRating] = useState('');
+  const [touched, setTouched] = useState({ name: false, rating: false });
+
+  useEffect(() => {
+    if (editingSnack) {
+      setName(editingSnack.name);
+      setRating(editingSnack.rating);
+    } else {
+      setName('');
+      setRating('');
+    }
+
+    setTouched({ name: false, rating: false });
+  }, [editingSnack]);
+
   function handleSubmit(e) {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const name = formData.get('name');
-    const rating = formData.get('rating');
+    // const formData = new FormData(e.target);
+    // const name = formData.get('name');
+    // const rating = formData.get('rating');
 
     if (isEditing) {
       updateSnack(editingSnack.id, name, rating);
     } else {
       addSnack(name, rating);
-      e.target.reset();
+      // e.target.reset();
+      setName('');
+      setRating('');
+      setTouched({ name: false, rating: false });
     }
   }
 
@@ -37,8 +57,11 @@ export default function SnackForm({
         <input
           type="text"
           name="name"
-          defaultValue={isEditing ? editingSnack.name : ''}
-          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onFocus={() => setTouched((prev) => ({ ...prev, name: true }))}
+          // defaultValue={isEditing ? editingSnack.name : ''}
+          // required
           className={styles['field-input']}
           placeholder="Enter snack name"
         />
@@ -49,8 +72,11 @@ export default function SnackForm({
         <input
           type="number"
           name="rating"
-          defaultValue={isEditing ? editingSnack.rating : ''}
-          required
+          value={rating}
+          onChange={(e) => setRating(e.target.value)}
+          onFocus={() => setTouched((prev) => ({ ...prev, rating: true }))}
+          // defaultValue={isEditing ? editingSnack.rating : ''}
+          // required
           min="1"
           max="5"
           className={styles['field-input']}

@@ -16,21 +16,44 @@ export default function SnackForm({
 
   useEffect(() => {
     if (editingSnack) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setName(editingSnack.name);
       setRating(editingSnack.rating);
     } else {
       setName('');
       setRating('');
     }
-
     setTouched({ name: false, rating: false });
   }, [editingSnack]);
+
+  const validateName = () => name.trim() !== '';
+  const validateRating = () => rating !== '';
+
+  const getNameError = () => {
+    if (touched.name && !validateName()) {
+      return 'Snack name is required';
+    }
+    return null;
+  };
+
+  const getRatingError = () => {
+    if (touched.rating && !validateRating()) {
+      return 'Please select a rating';
+    }
+    return null;
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
     // const formData = new FormData(e.target);
     // const name = formData.get('name');
     // const rating = formData.get('rating');
+
+    setTouched({ name: true, rating: true });
+
+    if (!validateName() || !validateRating()) {
+      return;
+    }
 
     if (isEditing) {
       updateSnack(editingSnack.id, name, rating);
@@ -42,6 +65,9 @@ export default function SnackForm({
       setTouched({ name: false, rating: false });
     }
   }
+
+  const nameError = getNameError();
+  const ratingError = getRatingError();
 
   return (
     <form
@@ -62,9 +88,10 @@ export default function SnackForm({
           onFocus={() => setTouched((prev) => ({ ...prev, name: true }))}
           // defaultValue={isEditing ? editingSnack.name : ''}
           // required
-          className={styles['field-input']}
+          className={`${styles['field-input']} ${nameError ? styles['input-error'] : ''}`}
           placeholder="Enter snack name"
         />
+        {nameError && <div className={styles.error}>{nameError} </div>}
       </div>
 
       <div className={styles['field-container']}>
@@ -79,9 +106,10 @@ export default function SnackForm({
           // required
           min="1"
           max="5"
-          className={styles['field-input']}
+          className={`${styles['field-input']} ${ratingError ? styles['input-error'] : ''}`}
           placeholder="Rate 1-5"
         />
+        {ratingError && <div className={styles.error}>{ratingError}</div>}
       </div>
 
       <div className={styles['button-container']}>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';

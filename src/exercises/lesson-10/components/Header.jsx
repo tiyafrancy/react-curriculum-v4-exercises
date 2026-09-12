@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router';
 
 export default function Header({ user }) {
   // Active link styling helper
